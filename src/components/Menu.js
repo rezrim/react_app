@@ -1,12 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Menu({ user }) {
   return (
     <ul>
-      <li>Home</li>
+      <li>
+        <Link to="/home">Home</Link>
+      </li>
       {user === "b" &&
         <li>
-          <a href="login.html">Calculator</a>
+          <Link to="/calculator">Calculator</Link>
         </li>}
       <li>Blog</li>
       <li>Job Information</li>
