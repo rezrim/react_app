@@ -1,41 +1,21 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-// import LayoutPages from "./pages/layout";
-import Menu from "./components/Menu";
-import logo from "./logo.svg";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-import HomePages from "./pages/home";
-import CalculatorPages from "./pages/calculator";
+import FrontIndex from "./pages/front";
+import AdminIndex from "./pages/admin";
+import NotFound from "./pages/front/notfound";
 
 function App() {
   return (
     <Router>
-      <div>
-        <div id="header">
-          <div className="container">
-            <div className="row-between">
-              <img src={logo} />
-              <Menu user="b" />
-              <div>
-                <a href="#">Login</a> |
-                <a href="register.html"> Register</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <Switch> {/* Seperti Yield */}
-          <Route path="/calculator">  {/* Seperti Section */}
-            <CalculatorPages /> {/* Component Home */}
-          </Route>
-          <Route path="/home">
-            <HomePages />
+        <Switch>
+          <Route path="/admin">
+            <AdminIndex />
           </Route>
           <Route path="/">
-            <HomePages />
+            <FrontIndex />
           </Route>
         </Switch>
-      </div>
     </Router>
   );
 }
