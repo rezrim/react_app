@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import MenuAdmin from "../../components/MenuAdmin";
 import logo from "../../logo.svg";
 import NotFound from "../front/notfound";
+import AdminCategoryPages from "./category";
 import AdminDashboardPages from "./dashboard";
 import AdminProductPages from "./product";
 
@@ -37,7 +38,10 @@ function AdminIndex(props) {
               <Route path="/admin/product">
                 <AdminProductPages />
               </Route>
-              <Route exact path="/">
+              <Route path="/admin/category">
+                <AdminCategoryPages />
+              </Route>
+              <Route exact path="/admin">
                 <AdminDashboardPages />
               </Route>
               <Route path="*">
