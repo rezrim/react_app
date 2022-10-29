@@ -34,6 +34,7 @@ function AdminCategoryPages(props) {
   const [dataCategory, setDataCategory] = useState([]);
   const [edit, setEdit] = useState(false);
   const [idDetail, setIdDetail] = useState(0);
+  const [auth, setAuth] = useState({});
 
   const columns = [
     { field: "no", headerName: "No.", width: 100 },
@@ -76,51 +77,71 @@ function AdminCategoryPages(props) {
   ];
 
   useEffect(() => {
-    getData();
+    getDataAuth();
   }, []);
 
-  const getData = () => {
-    const header = {
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Bearer 5|QU8UqFPfI5NYoDg2PHjueqYy4iTuIaTj28c5YAqI",
-      },
-    };
+  useEffect(
+    () => {
+      getData();
+    },
+    [auth],
+  );
 
-    axios
-      .get(Config.api_url + "category", header)
-      .then(function(response) {
-        const value = response.data;
-        if (value.status) {
-          const val = value.data;
-          let allData = [];
-          let no = 0;
+  const getDataAuth = () => {
+    const auth = localStorage.getItem("User");
+    setAuth(JSON.parse(auth));
+  };
 
-          val.forEach(e => {
-            no++;
-            allData.push({
-              id: e.id,
-              no,
-              category_name: e.category_name,
-              active: e.active,
+  const getData = (search="") => {
+    if (auth !== {}) {
+      const header = {
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          Authorization: "Bearer " + auth.token,
+        },
+      };
+
+      let query = ""
+
+      if(search != ""){
+        query = "?q="+search
+      }
+
+      axios
+        .get(Config.api_url + "category"+query, header)
+        .then(function(response) {
+          const value = response.data;
+          if (value.status) {
+            const val = value.data;
+            let allData = [];
+            let no = 0;
+
+            val.forEach(e => {
+              no++;
+              allData.push({
+                id: e.id,
+                no,
+                category_name: e.category_name,
+                active: e.active,
+              });
             });
-          });
 
-          setDataCategory(allData);
-        } else {
-          alert(value.message);
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+            setDataCategory(allData);
+          } else {
+            alert(value.message);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   };
 
   const getDataDetail = id => {
     const header = {
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Bearer 5|QU8UqFPfI5NYoDg2PHjueqYy4iTuIaTj28c5YAqI",
+        Authorization: "Bearer " + auth.token,
       },
     };
 
@@ -149,7 +170,7 @@ function AdminCategoryPages(props) {
     const header = {
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Bearer 5|QU8UqFPfI5NYoDg2PHjueqYy4iTuIaTj28c5YAqI",
+        Authorization: "Bearer " + auth.token,
       },
     };
 
@@ -181,7 +202,7 @@ function AdminCategoryPages(props) {
     const header = {
       headers: {
         "content-type": "application/x-www-form-urlencoded",
-        Authorization: "Bearer 5|QU8UqFPfI5NYoDg2PHjueqYy4iTuIaTj28c5YAqI",
+        Authorization: "Bearer " + auth.token,
       },
     };
 
@@ -212,7 +233,7 @@ function AdminCategoryPages(props) {
       const header = {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          Authorization: "Bearer 5|QU8UqFPfI5NYoDg2PHjueqYy4iTuIaTj28c5YAqI",
+          Authorization: "Bearer " + auth.token,
         },
       };
 
@@ -249,6 +270,11 @@ function AdminCategoryPages(props) {
     setCategoryName(event.target.value);
   };
 
+  const handleSearch = event => {
+    const text = event.target.value
+    getData(text)
+  };
+
   const editData = id => {
     getDataDetail(id);
     setEdit(true);
@@ -277,8 +303,9 @@ function AdminCategoryPages(props) {
           <div style={{ height: 400, width: "100%", marginTop: 30 }}>
             <TextField
               margin="normal"
-              label="Search Product Name"
+              label="Search Category Name"
               name="search"
+              onChange={handleSearch}
             />
             <DataGrid
               rows={dataCategory}

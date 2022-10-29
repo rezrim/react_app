@@ -12,6 +12,7 @@ function App() {
           <Route path="/admin">
             <AdminIndex />
           </Route>
+          
           <Route path="/">
             <FrontIndex />
           </Route>
